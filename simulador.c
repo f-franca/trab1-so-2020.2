@@ -1,5 +1,5 @@
 #include<stdio.h>
-
+#include <stdlib.h>
 struct Processos
 {
     int qtd_total_ios, tempo_de_chegada_io[10], tipo_io[10];
@@ -9,7 +9,12 @@ struct Processos
 int main()
 {
     // Declarando Variaveis Necessárias
-    int i, j, qtd_total_processos, total = 0, x, var_aux = 0, quantum;    
+    int i, j, qtd_total_processos, total = 0, x, var_aux = 0, quantum, upper = 3, lower = 1;  
+    int tempo_de_explosao_impressora = (rand() % (upper - lower + 1)) + lower, tempo_de_explosao_disco = (rand() % (upper - lower + 1)) + lower, tempo_de_explosao_fita = (rand() % (upper - lower + 1)) + lower;
+    printf("Iniciando o Simulador ... \n\n");
+    printf("Tempo de Explossão da Fita:\t %d \n", tempo_de_explosao_fita);
+    printf("Tempo de Explosão do Disco:\t %d \n", tempo_de_explosao_disco);
+    printf("Tempo de Explosão da Impressora:\t %d \n", tempo_de_explosao_impressora);
     int tempo_de_espera = 0, tempo_de_resposta = 0;
     float tempo_medio_de_espera, tempo_medio_de_resposta;
     printf("\nEntre o numero total de processos:\t");
@@ -19,7 +24,7 @@ int main()
 
     struct Processos processo[x];
     
-    int array_temp[x];
+    int array_temp[x], lista_prioridade_alta[x], lista_prioridade_baixa[x];
 
     // Faz um loop recebendo as informações referentes a cada processo
     for(i = 0; i < qtd_total_processos; i++)
@@ -45,6 +50,7 @@ int main()
         }
         // Variavel Temporaria
         array_temp[i] = processo[i].tempo_de_explosao_processo;
+        lista_prioridade_alta[i] = i+1;
     }
  
     printf("\nEntre o tempo do Quantum:\t");
