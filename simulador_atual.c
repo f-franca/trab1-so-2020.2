@@ -58,15 +58,10 @@ int main()
     
     //loops para inicializar listas com 0(vazio)
     //inicializando lista_prioridade_alta e lista_prioridade_baixa
-    for(i = 0; i<qtd_total_processos; i++;)
+    for(i = 0; i<qtd_total_processos; i++)
     {
         lista_prioridade_baixa[i] = 0;
         lista_prioridade_alta[i] = 0;
-    }
-    
-    //inicializando lista_disco, lista_fita e lista_impressora
-    for(i = 0; i<10; i++;)
-    {
         lista_disco[i] = 0;
         lista_fita[i] = 0;
         lista_impressora[i] = 0;
@@ -212,7 +207,7 @@ int main()
                 int m = 0;
                 for (m = 1 ; m < qtd_total_processos ; m++){
                     if (lista_prioridade_alta[m]==0){
-                        lista_prioridade_alta[m] = j;
+                        lista_prioridade_alta[m] = j+1;
                         break;
                     }
                 }
