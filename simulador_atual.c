@@ -75,9 +75,7 @@ int main()
                     if(processo[lista_prioridade_alta[0]].tempo_de_chegada_io[j] == i)
                     {
                         //identifica o tipo de IO requisitado, remove o processo atual da fila de prontos de alta prioridade e insere na fila do IO respectivo
-                        
                         //funcao para remover o processo atual da fila de prontos de alta prioridade
-                        // RETIRA da fila de ALTA prioridade
 		                for (k = 1 ; k < qtd_total_processos ; k++){
 		                    lista_prioridade_alta[k-1]=lista_prioridade_alta[k];
 		                }
@@ -87,17 +85,42 @@ int main()
                         {
                             //funcao para inserir o processo lista_prioridade_alta[0] no final da fila de disco
                             contador_disco = tempo_de_explosao_disco;
+                            int m = 0;
+                            for (m = 1 ; m < qtd_total_processos ; m++){
+                                if (lista_disco[m]==0){
+                                    lista_disco[m] = lista_prioridade_alta[0];
+                                    break;
+                                }
+                            }
+
                         }
-                        else 
-                        if(processo[lista_prioridade_alta[0]].tipo_io[j] == 2)
+
+                        else if(processo[lista_prioridade_alta[0]].tipo_io[j] == 2)
                         {
                             //funcao para inserir o processo lista_prioridade_alta[0] no final da fila de fita
                             contador_fita = tempo_de_explosao_fita;
+                            int m = 0;
+                            for (m = 1 ; m < qtd_total_processos ; m++){
+                                if (lista_fita[m]==0){
+                                    lista_fita[m] = lista_prioridade_alta[0];
+                                    break;
+                                }
+                            }
+                            
                         }
                         else 
                         {
                             //funcao para inserir o processo lista_prioridade_alta[0] no final da fila de impressora
                             contador_impressora = tempo_de_explosao_impressora;
+                            
+                            int m = 0;
+                            for (m = 1 ; m < qtd_total_processos ; m++){
+                                if (lista_impressora[m]==0){
+                                    lista_impressora[m] = lista_prioridade_alta[0];
+                                    break;
+                                }
+                            }
+
                         }
                     }
                 }
@@ -114,22 +137,49 @@ int main()
                             //identifica o tipo de IO requisitado, remove o processo atual da fila de prontos de baixa prioridade e insere na fila do IO respectivo
                             
                             //funcao para remover o processo atual da fila de prontos de baixa prioridade
-                            
-                            if(processo[lista_prioridade_alta[0]].tipo_io[j] == 1)
+                            for (k = 1 ; k < qtd_total_processos ; k++){
+                                lista_prioridade_baixa[k-1]=lista_prioridade_baixa[k];
+                            }
+                            lista_prioridade_baixa[qtd_total_processos-1]=0;
+
+                            if(processo[lista_prioridade_baixa[0]].tipo_io[j] == 1)
                             {
                                 //funcao para inserir o processo lista_prioridade_baixa[0] no final da fila de disco
                                 contador_disco = tempo_de_explosao_disco;
+                                int m = 0;
+                                for (m = 1 ; m < qtd_total_processos ; m++){
+                                    if (lista_disco[m]==0){
+                                        lista_disco[m] = lista_prioridade_baixa[0];
+                                        break;
+                                    }
+                                }
+
                             }
                             else 
-                            if(processo[lista_prioridade_alta[0]].tipo_io[j] == 2)
+                            if(processo[lista_prioridade_baixa[0]].tipo_io[j] == 2)
                             {
                                 //funcao para inserir o processo lista_prioridade_baixa[0] no final da fila de fita
                                 contador_fita = tempo_de_explosao_fita;
+                                int m = 0;
+                                for (m = 1 ; m < qtd_total_processos ; m++){
+                                    if (lista_fita[m]==0){
+                                        lista_fita[m] = lista_prioridade_baixa[0];
+                                        break;
+                                    }
+                                }
+
                             }
                             else 
                             {
                                 //funcao para inserir o processo lista_prioridade_baixa[0] no final da fila de impressora
                                 contador_impressora = tempo_de_explosao_impressora;
+                                int m = 0;
+                                for (m = 1 ; m < qtd_total_processos ; m++){
+                                    if (lista_impressora[m]==0){
+                                        lista_impressora[m] = lista_prioridade_baixa[0];
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
@@ -142,6 +192,13 @@ int main()
             if(processo[j].tempo_de_chegada_processo == i)
             {
                 //funcao para inserir o processo j no final da fila de alta prioridade
+                int m = 0;
+                for (m = 1 ; m < qtd_total_processos ; m++){
+                    if (lista_prioridade_alta[m]==0){
+                        lista_prioridade_alta[m] = j;
+                        break;
+                    }
+                }
             }
         }
         
@@ -156,8 +213,19 @@ int main()
                 if(contador_disco == 0)
                 {
                     //funcao para inserir o processo lista_disco[0] no final da fila de baixa prioridade
+                    int m = 0;
+                    for (m = 1 ; m < qtd_total_processos ; m++){
+                        if (lista_prioridade_baixa[m]==0){
+                            lista_prioridade_baixa[m] = lista_disco[0] ;
+                            break;
+                        }
+                    }
                     //funcao para remover o processo lista_disco[0] do inicio da fila de disco
-                    
+                    int k=0;
+                    for (k = 1 ; k < qtd_total_processos ; k++){
+                        lista_disco[k-1]=lista_disco[k];
+                    }
+                    lista_disco[qtd_total_processos-1]=0;
                 }
             }
             else
@@ -170,13 +238,23 @@ int main()
                 if(contador_fita == 0)
                 {
                     //funcao para inserir o processo lista_fita[0] no final da fila de alta prioridade
+                    int m = 0;
+                    for (m = 1 ; m < qtd_total_processos ; m++){
+                        if (lista_prioridade_alta[m]==0){
+                            lista_prioridade_alta[m] = lista_fita[0] ;
+                            break;
+                        }
+                    }
                     //funcao para remover o processo lista_fita[0] do inicio da fila de fita
-                    
+                    int k=0;
+                    for (k = 1 ; k < qtd_total_processos ; k++){
+                        lista_fita[k-1]=lista_fita[k];
+                    }
+                    lista_fita[qtd_total_processos-1]=0;
                 }
             }
-            else
             //verifica fila de impressora. Se existe, processa e decrementa o contador.
-            if(lista_impressora[0] != 0)
+            else if(lista_impressora[0] != 0)
             {
                 contador_impressora--;
                 //Se contador igual a zero, terminou de processar.
@@ -184,8 +262,19 @@ int main()
                 if(contador_impressora == 0)
                 {
                     //funcao para inserir o processo lista_impressora[0] no final da fila de alta prioridade
+                    int m = 0;
+                    for (m = 1 ; m < qtd_total_processos ; m++){
+                        if (lista_prioridade_alta[m]==0){
+                            lista_prioridade_alta[m] = lista_impressora[0] ;
+                            break;
+                        }
+                    }
                     //funcao para remover o processo lista_impressora[0] do inicio da fila de impressora
-                    
+                    int k=0;
+                    for (k = 1 ; k < qtd_total_processos ; k++){
+                        lista_impressora[k-1]=lista_impressora[k];
+                    }
+                    lista_impressora[qtd_total_processos-1]=0;
                 }
             }
         
