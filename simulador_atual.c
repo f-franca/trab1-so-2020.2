@@ -9,7 +9,7 @@ struct Processos
 int main()
 {
     // Declarando Variaveis Necessárias
-    int i, j, contador_disco, contador_fita, contador_impressora, qtd_total_processos, total = 0, x, var_aux = 0, quantum, upper = 5, lower = 1;  
+    int i, j, k, contador_disco, contador_fita, contador_impressora, qtd_total_processos, total = 0, x, var_aux = 0, quantum, upper = 5, lower = 1;  
     int tempo_de_explosao_impressora = (rand() % (upper - lower + 1)) + lower, tempo_de_explosao_disco = (rand() % (upper - lower + 1)) + lower, tempo_de_explosao_fita = (rand() % (upper - lower + 1)) + lower;
     int tempo_de_espera = 0, tempo_de_resposta = 0;
     float tempo_medio_de_espera, tempo_medio_de_resposta;
@@ -62,48 +62,7 @@ int main()
     // Percorre enquanto a quantidade de processos for diferente de zero 
     for(total = 0, i = 0; x != 0;)
     {
-    
-    //verifica no final de cada quantum
-        if( i%quantum == 0)
-        {
-            if( lista_prioridade_alta[0] != 0 )
-            {
-                //funcao para inserir o processo atual no final da fila de baixa prioridade
-                for (i = 1 ; i < qtd_total_processos ; i++){
-                    if (lista_prioridade_baixa[i]==0){
-                        lista_prioridade_baixa[i] = lista_prioridade_alta[0] ;
-                        break;
-                    }
-                }
-                lista_prioridade_baixa[qtd_total_processos-1]=0;
-
-                //funcao para remover o processo atual do inicio da fila de prontos de alta prioridade
-                // RETIRA da fila de ALTA prioridade
-                for (i = 1 ; i < qtd_total_processos ; i++){
-                    lista_prioridade_alta[i-1]=lista_prioridade_alta[i];
-                }
-                lista_prioridade_alta[qtd_total_processos-1]=0;
-            } 
-            else
-            if( lista_prioridade_baixa[0] != 0)
-            {
-                //funcao para inserir o processo atual no final da fila de baixa prioridade
-                for (i = 1 ; i < qtd_total_processos ; i++){
-                    if (lista_prioridade_baixa[i]==0){
-                        lista_prioridade_baixa[i] = lista_prioridade_alta[0] ;
-                        break;
-                    }
-                }
-                lista_prioridade_baixa[qtd_total_processos-1]=0;
-                
-                //funcao para remover o processo atual do inicio da fila de prontos de baixa prioridade
-                for (i = 1 ; i < qtd_total_processos ; i++){
-                    lista_prioridade_baixa[i-1]=lista_prioridade_baixa[i];
-                }
-                lista_prioridade_baixa[qtd_total_processos-1]=0;
-            }
-        }
-        
+    	        
     //verifica a cada tique
         //verificar se processo atual pediu IO
             //verifica lista de prontos de alta prioridade
@@ -118,7 +77,12 @@ int main()
                         //identifica o tipo de IO requisitado, remove o processo atual da fila de prontos de alta prioridade e insere na fila do IO respectivo
                         
                         //funcao para remover o processo atual da fila de prontos de alta prioridade
-                        
+                        // RETIRA da fila de ALTA prioridade
+		                for (k = 1 ; k < qtd_total_processos ; k++){
+		                    lista_prioridade_alta[k-1]=lista_prioridade_alta[k];
+		                }
+		                lista_prioridade_alta[qtd_total_processos-1]=0;
+
                         if(processo[lista_prioridade_alta[0]].tipo_io[j] == 1)
                         {
                             //funcao para inserir o processo lista_prioridade_alta[0] no final da fila de disco
@@ -225,6 +189,44 @@ int main()
                 }
             }
         
+        //verifica no final de cada quantum
+        if( i%quantum == 0)
+        {
+            if( lista_prioridade_alta[0] != 0 )
+            {
+                //funcao para inserir o processo atual no final da fila de baixa prioridade
+                for (j = 1 ; j < qtd_total_processos ; j++){
+                    if (lista_prioridade_baixa[j]==0){
+                        lista_prioridade_baixa[j] = lista_prioridade_alta[0] ;
+                        break;
+                    }
+                }
+                
+                //funcao para remover o processo atual do inicio da fila de prontos de alta prioridade
+                // RETIRA da fila de ALTA prioridade
+                for (j = 1 ; j < qtd_total_processos ; j++){
+                    lista_prioridade_alta[j-1]=lista_prioridade_alta[j];
+                }
+                lista_prioridade_alta[qtd_total_processos-1]=0;
+            } 
+            else
+            if( lista_prioridade_baixa[0] != 0)
+            {
+                //funcao para inserir o processo atual no final da fila de baixa prioridade
+                for (j = 1 ; j < qtd_total_processos ; j++){
+                    if (lista_prioridade_baixa[j]==0){
+                        lista_prioridade_baixa[j] = lista_prioridade_alta[0] ;
+                        break;
+                    }
+                }
+                                
+                //funcao para remover o processo atual do inicio da fila de prontos de baixa prioridade
+                for (j = 1 ; j < qtd_total_processos ; j++){
+                    lista_prioridade_baixa[j-1]=lista_prioridade_baixa[j];
+                }
+                lista_prioridade_baixa[qtd_total_processos-1]=0;
+            }
+        }
             
         // Verifica de tempo de explosão dele é menor ou igual o quanto e maior que zero
         if(array_temp[i] <= quantum && array_temp[i] > 0)
