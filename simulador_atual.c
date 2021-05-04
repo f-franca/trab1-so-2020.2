@@ -15,6 +15,7 @@ int main()
     float tempo_medio_de_espera, tempo_medio_de_resposta;
 
     printf("Iniciando o Simulador ... \n\n");
+    printf("Tamanho maximo de fila de cada tipo de IO: 10 \n\n");
     printf("Tempo de Explossão da Fita:\t %d \n", tempo_de_explosao_fita);
     printf("Tempo de Explosão do Disco:\t %d \n", tempo_de_explosao_disco);
     printf("Tempo de Explosão da Impressora:\t %d \n", tempo_de_explosao_impressora);
@@ -26,7 +27,7 @@ int main()
 
     struct Processos processo[x];
     
-    int array_temp[x], lista_prioridade_alta[x], lista_prioridade_baixa[x], lista_disco[x], lista_fita[x], lista_impressora[x];
+    int array_temp[x], lista_prioridade_alta[x], lista_prioridade_baixa[x], lista_disco[10], lista_fita[10], lista_impressora[10];
 
     // Faz um loop recebendo as informações referentes a cada processo
     for(i = 0; i < qtd_total_processos; i++)
@@ -54,7 +55,23 @@ int main()
         array_temp[i] = processo[i].tempo_de_explosao_processo;
         lista_prioridade_alta[i] = i;
     }
- 
+    
+    //loops para inicializar listas com 0(vazio)
+    //inicializando lista_prioridade_alta e lista_prioridade_baixa
+    for(i = 0; i<qtd_total_processos; i++;)
+    {
+        lista_prioridade_baixa[i] = 0;
+        lista_prioridade_alta[i] = 0;
+    }
+    
+    //inicializando lista_disco, lista_fita e lista_impressora
+    for(i = 0; i<10; i++;)
+    {
+        lista_disco[i] = 0;
+        lista_fita[i] = 0;
+        lista_impressora[i] = 0;
+    }
+    
     printf("\nEntre o tempo do Quantum:\t");
     scanf("%d", &quantum);
     printf("\nProcesso ID\t\tTempo de Explosão\t Tempo de Resposta\t Tempo de Espera\n");
