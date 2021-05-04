@@ -11,12 +11,14 @@ int main()
     // Declarando Variaveis Necessárias
     int i, j, contador_disco, contador_fita, contador_impressora, qtd_total_processos, total = 0, x, var_aux = 0, quantum, upper = 5, lower = 1;  
     int tempo_de_explosao_impressora = (rand() % (upper - lower + 1)) + lower, tempo_de_explosao_disco = (rand() % (upper - lower + 1)) + lower, tempo_de_explosao_fita = (rand() % (upper - lower + 1)) + lower;
+    int tempo_de_espera = 0, tempo_de_resposta = 0;
+    float tempo_medio_de_espera, tempo_medio_de_resposta;
+
     printf("Iniciando o Simulador ... \n\n");
     printf("Tempo de Explossão da Fita:\t %d \n", tempo_de_explosao_fita);
     printf("Tempo de Explosão do Disco:\t %d \n", tempo_de_explosao_disco);
     printf("Tempo de Explosão da Impressora:\t %d \n", tempo_de_explosao_impressora);
-    int tempo_de_espera = 0, tempo_de_resposta = 0;
-    float tempo_medio_de_espera, tempo_medio_de_resposta;
+    
     printf("\nEntre o numero total de processos:\t");
     scanf("%d", &qtd_total_processos);
 
@@ -50,7 +52,7 @@ int main()
         }
         // Variavel Temporaria
         array_temp[i] = processo[i].tempo_de_explosao_processo;
-        lista_prioridade_alta[i] = i+1;
+        lista_prioridade_alta[i] = i;
     }
  
     printf("\nEntre o tempo do Quantum:\t");
@@ -67,14 +69,38 @@ int main()
             if( lista_prioridade_alta[0] != 0 )
             {
                 //funcao para inserir o processo atual no final da fila de baixa prioridade
+                for (i = 1 ; i < qtd_total_processos ; i++){
+                    if (lista_prioridade_baixa[i]==0){
+                        lista_prioridade_baixa[i] = lista_prioridade_alta[0] ;
+                        break;
+                    }
+                }
+                lista_prioridade_baixa[qtd_total_processos-1]=0;
+
                 //funcao para remover o processo atual do inicio da fila de prontos de alta prioridade
-                
+                // RETIRA da fila de ALTA prioridade
+                for (i = 1 ; i < qtd_total_processos ; i++){
+                    lista_prioridade_alta[i-1]=lista_prioridade_alta[i];
+                }
+                lista_prioridade_alta[qtd_total_processos-1]=0;
             } 
             else
             if( lista_prioridade_baixa[0] != 0)
             {
                 //funcao para inserir o processo atual no final da fila de baixa prioridade
+                for (i = 1 ; i < qtd_total_processos ; i++){
+                    if (lista_prioridade_baixa[i]==0){
+                        lista_prioridade_baixa[i] = lista_prioridade_alta[0] ;
+                        break;
+                    }
+                }
+                lista_prioridade_baixa[qtd_total_processos-1]=0;
+                
                 //funcao para remover o processo atual do inicio da fila de prontos de baixa prioridade
+                for (i = 1 ; i < qtd_total_processos ; i++){
+                    lista_prioridade_baixa[i-1]=lista_prioridade_baixa[i];
+                }
+                lista_prioridade_baixa[qtd_total_processos-1]=0;
             }
         }
         
@@ -93,13 +119,13 @@ int main()
                         
                         //funcao para remover o processo atual da fila de prontos de alta prioridade
                         
-                        if(processo.tipo_io[j] == 1)
+                        if(processo[lista_prioridade_alta[0]].tipo_io[j] == 1)
                         {
                             //funcao para inserir o processo lista_prioridade_alta[0] no final da fila de disco
                             contador_disco = tempo_de_explosao_disco;
                         }
                         else 
-                        if(processo.tipo_io[j] == 2)
+                        if(processo[lista_prioridade_alta[0]].tipo_io[j] == 2)
                         {
                             //funcao para inserir o processo lista_prioridade_alta[0] no final da fila de fita
                             contador_fita = tempo_de_explosao_fita;
@@ -125,13 +151,13 @@ int main()
                             
                             //funcao para remover o processo atual da fila de prontos de baixa prioridade
                             
-                            if(processo.tipo_io[j] == 1)
+                            if(processo[lista_prioridade_alta[0]].tipo_io[j] == 1)
                             {
                                 //funcao para inserir o processo lista_prioridade_baixa[0] no final da fila de disco
                                 contador_disco = tempo_de_explosao_disco;
                             }
                             else 
-                            if(processo.tipo_io[j] == 2)
+                            if(processo[lista_prioridade_alta[0]].tipo_io[j] == 2)
                             {
                                 //funcao para inserir o processo lista_prioridade_baixa[0] no final da fila de fita
                                 contador_fita = tempo_de_explosao_fita;
