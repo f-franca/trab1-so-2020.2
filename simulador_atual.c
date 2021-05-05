@@ -3,7 +3,7 @@
 struct Processos
 {
     int qtd_total_ios, tempo_de_chegada_io[10], tipo_io[10];
-    int tempo_de_espera, tempo_de_resposta, tempo_de_chegada_processo, tempo_de_explosao_processo, tempo_processamento;
+    int tempo_de_espera, tempo_de_resposta, tempo_de_chegada_processo, tempo_de_explosao_processo, tempo_processamento, total_io;
 };
 
 int main()
@@ -296,14 +296,7 @@ int main()
             }
         }
     
-        /*int qwert = 0;
-        int delete_me;
-        for (qwert=0 ; qwert < qtd_total_processos ; qwert ++){
-            printf("x [%d]; i: [%d]\n",x,i);
-            printf("ANTES Lista alta [%d]\n",lista_prioridade_alta[qwert]);
-            printf("ANTES Lista baixa [%d]\n",lista_prioridade_baixa[qwert]);
-            getchar();
-        }*/
+      
 
         //verifica no final de cada quantum
         if( (i!= 0) && (i%quantum == 0) )
@@ -336,7 +329,7 @@ int main()
                 //funcao para inserir o processo atual no final da fila de baixa prioridade
                 for (j = 0 ; j < qtd_total_processos ; j++){
                     if (lista_prioridade_baixa[j]==0){
-                        lista_prioridade_baixa[j] = lista_prioridade_alta[0] ;
+                        lista_prioridade_baixa[j] = lista_prioridade_baixa[0] ;
                         break;
                     }
                 }
@@ -350,17 +343,15 @@ int main()
             }
 
             int qwert = 0;
-            int delete_me;
             for (qwert=0 ; qwert < qtd_total_processos ; qwert ++){
                 printf("x [%d]; i: [%d]\n",x,i);
-                printf("APÓS QUANTUM Lista alta [%d]\n",lista_prioridade_alta[qwert]);
-                printf("APÓS QUANTUM Lista baixa [%d]\n",lista_prioridade_baixa[qwert]);
+                printf("APOS QUANTUM Lista alta [%d]\n",lista_prioridade_alta[qwert]);
+                printf("APOS QUANTUM Lista baixa [%d]\n",lista_prioridade_baixa[qwert]);
                 getchar();
             }
         }
 
         int qwert = 0;
-        int delete_me;
         for (qwert=0 ; qwert < qtd_total_processos ; qwert ++){
             printf("\nx [%d]; i: [%d]\n",x,i);
             printf("APOS Lista alta [%d]\n",lista_prioridade_alta[qwert]);
