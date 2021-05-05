@@ -81,12 +81,12 @@ int main()
             //verifica lista de prontos de alta prioridade
             if(lista_prioridade_alta[0] != 0)
             {
-                processo[lista_prioridade_alta[0]].tempo_processamento++;
+                processo[lista_prioridade_alta[0]-1].tempo_processamento++;
                 //percorre a lista de tempos io do processo atual e compara com o tempo atual de execucao 
-                for(j=0; j<processo[lista_prioridade_alta[0]].qtd_total_ios;j++)
+                for(j=0; j<processo[lista_prioridade_alta[0]-1].qtd_total_ios;j++)
                 {
                     //testa se algum tempo de IO do processo eh o tempo atual
-                    if(processo[lista_prioridade_alta[0]].tempo_de_chegada_io[j] == i)
+                    if(processo[lista_prioridade_alta[0]-1].tempo_de_chegada_io[j] == i)
                     {
                         //identifica o tipo de IO requisitado, remove o processo atual da fila de prontos de alta prioridade e insere na fila do IO respectivo
                         //funcao para remover o processo atual da fila de prontos de alta prioridade
@@ -95,7 +95,7 @@ int main()
 		                }
 		                lista_prioridade_alta[qtd_total_processos-1]=0;
 
-                        if(processo[lista_prioridade_alta[0]].tipo_io[j] == 1)
+                        if(processo[lista_prioridade_alta[0]-1].tipo_io[j] == 1)
                         {
                             //funcao para inserir o processo lista_prioridade_alta[0] no final da fila de disco
                             contador_disco = tempo_de_explosao_disco;
@@ -110,7 +110,7 @@ int main()
 
                         }
 
-                        else if(processo[lista_prioridade_alta[0]].tipo_io[j] == 2)
+                        else if(processo[lista_prioridade_alta[0]-1].tipo_io[j] == 2)
                         {
                             //funcao para inserir o processo lista_prioridade_alta[0] no final da fila de fita
                             contador_fita = tempo_de_explosao_fita;
@@ -144,10 +144,10 @@ int main()
             else if(lista_prioridade_baixa[0] != 0)
                  {
                     //percorre a lista de tempos io do processo atual e compara com o tempo atual de execucao 
-                    for(j=0; j<processo[lista_prioridade_baixa[0]].qtd_total_ios; j++)
+                    for(j=0; j<processo[lista_prioridade_baixa[0]-1].qtd_total_ios; j++)
                     {
                         //testa se algum tempo de IO do processo eh o tempo atual
-                        if(processo[lista_prioridade_baixa[0]].tempo_de_chegada_io[j] == i)
+                        if(processo[lista_prioridade_baixa[0]-1].tempo_de_chegada_io[j] == i)
                         {
                             //identifica o tipo de IO requisitado, remove o processo atual da fila de prontos de baixa prioridade e insere na fila do IO respectivo
                             
@@ -157,7 +157,7 @@ int main()
                             }
                             lista_prioridade_baixa[qtd_total_processos-1]=0;
 
-                            if(processo[lista_prioridade_baixa[0]].tipo_io[j] == 1)
+                            if(processo[lista_prioridade_baixa[0]-1].tipo_io[j] == 1)
                             {
                                 //funcao para inserir o processo lista_prioridade_baixa[0] no final da fila de disco
                                 contador_disco = tempo_de_explosao_disco;
@@ -171,7 +171,7 @@ int main()
 
                             }
                             else 
-                            if(processo[lista_prioridade_baixa[0]].tipo_io[j] == 2)
+                            if(processo[lista_prioridade_baixa[0]-1].tipo_io[j] == 2)
                             {
                                 //funcao para inserir o processo lista_prioridade_baixa[0] no final da fila de fita
                                 contador_fita = tempo_de_explosao_fita;
@@ -208,7 +208,7 @@ int main()
             {
                 //funcao para inserir o processo j no final da fila de alta prioridade
                 int m = 0;
-                for (m = 1 ; m < qtd_total_processos ; m++){
+                for (m = 0 ; m < qtd_total_processos ; m++){
                     if (lista_prioridade_alta[m]==0){
                         lista_prioridade_alta[m] = j+1;
                         printf("Processo Criado \n");
@@ -231,7 +231,7 @@ int main()
                 {
                     //funcao para inserir o processo lista_disco[0] no final da fila de baixa prioridade
                     int m = 0;
-                    for (m = 1 ; m < qtd_total_processos ; m++){
+                    for (m = 0 ; m < qtd_total_processos ; m++){
                         if (lista_prioridade_baixa[m]==0){
                             lista_prioridade_baixa[m] = lista_disco[0] ;
                             break;
@@ -256,7 +256,7 @@ int main()
                 {
                     //funcao para inserir o processo lista_fita[0] no final da fila de alta prioridade
                     int m = 0;
-                    for (m = 1 ; m < qtd_total_processos ; m++){
+                    for (m = 0 ; m < qtd_total_processos ; m++){
                         if (lista_prioridade_alta[m]==0){
                             lista_prioridade_alta[m] = lista_fita[0] ;
                             break;
@@ -280,7 +280,7 @@ int main()
                 {
                     //funcao para inserir o processo lista_impressora[0] no final da fila de alta prioridade
                     int m = 0;
-                    for (m = 1 ; m < qtd_total_processos ; m++){
+                    for (m = 0 ; m < qtd_total_processos ; m++){
                         if (lista_prioridade_alta[m]==0){
                             lista_prioridade_alta[m] = lista_impressora[0] ;
                             break;
@@ -298,11 +298,11 @@ int main()
         //verifica no final de cada quantum
         if( i%quantum == 0)
         {
-            printf("final do quantum \n");
+            printf("final do quantum, %d \n",i);
             if( lista_prioridade_alta[0] != 0 )
             {
                 //funcao para inserir o processo atual no final da fila de baixa prioridade
-                for (j = 1 ; j < qtd_total_processos ; j++){
+                for (j = 0 ; j < qtd_total_processos ; j++){
                     if (lista_prioridade_baixa[j]==0){
                         lista_prioridade_baixa[j] = lista_prioridade_alta[0] ;
                         
