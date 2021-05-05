@@ -3,7 +3,7 @@
 struct Processos
 {
     int qtd_total_ios, tempo_de_chegada_io[10], tipo_io[10];
-    int tempo_de_espera, tempo_de_resposta, tempo_de_chegada_processo, tempo_de_explosao_processo;
+    int tempo_de_espera, tempo_de_resposta, tempo_de_chegada_processo, tempo_de_explosao_processo, tempo_processamento;
 };
 
 int main()
@@ -27,7 +27,7 @@ int main()
 
     struct Processos processo[x];
     
-    int array_temp[x], lista_prioridade_alta[x], lista_prioridade_baixa[x], lista_disco[10], lista_fita[10], lista_impressora[10];
+    int array_temp[x], lista_prioridade_alta[x], lista_prioridade_baixa[x], lista_disco[x], lista_fita[x], lista_impressora[x];
 
     // Faz um loop recebendo as informações referentes a cada processo
     for(i = 0; i < qtd_total_processos; i++)
@@ -54,10 +54,11 @@ int main()
         // Variavel Temporaria
         array_temp[i] = processo[i].tempo_de_explosao_processo;
         lista_prioridade_alta[i] = i;
+        processo[i].tempo_processamento = 0;
     }
     
     //loops para inicializar listas com 0(vazio)
-    //inicializando lista_prioridade_alta e lista_prioridade_baixa
+    //inicializando lista_prioridade_alta, lista_prioridade_baixa, lista_disco, lista_fita e lista_impressora
     for(i = 0; i<qtd_total_processos; i++)
     {
         lista_prioridade_baixa[i] = 0;
@@ -72,7 +73,7 @@ int main()
     printf("\nProcesso ID\t\tTempo de Explosão\t Tempo de Resposta\t Tempo de Espera\n");
     
     // Percorre enquanto a quantidade de processos for diferente de zero 
-    for(total = 0, i = 0; x != 0;)
+    for(i = 0; x != 0; i++)
     {
     	        
     //verifica a cada tique
@@ -80,6 +81,7 @@ int main()
             //verifica lista de prontos de alta prioridade
             if(lista_prioridade_alta[0] != 0)
             {
+                processo[lista_prioridade_alta[0]].tempo_processamento++;
                 //percorre a lista de tempos io do processo atual e compara com o tempo atual de execucao 
                 for(j=0; j<processo[lista_prioridade_alta[0]].qtd_total_ios;j++)
                 {
@@ -104,6 +106,7 @@ int main()
                                     break;
                                 }
                             }
+                            
 
                         }
 
@@ -208,9 +211,11 @@ int main()
                 for (m = 1 ; m < qtd_total_processos ; m++){
                     if (lista_prioridade_alta[m]==0){
                         lista_prioridade_alta[m] = j+1;
+                        printf("Processo Criado \n");
                         break;
                     }
                 }
+                
             }
         }
         
@@ -293,12 +298,14 @@ int main()
         //verifica no final de cada quantum
         if( i%quantum == 0)
         {
+            printf("final do quantum \n");
             if( lista_prioridade_alta[0] != 0 )
             {
                 //funcao para inserir o processo atual no final da fila de baixa prioridade
                 for (j = 1 ; j < qtd_total_processos ; j++){
                     if (lista_prioridade_baixa[j]==0){
                         lista_prioridade_baixa[j] = lista_prioridade_alta[0] ;
+                        
                         break;
                     }
                 }
@@ -309,6 +316,7 @@ int main()
                     lista_prioridade_alta[j-1]=lista_prioridade_alta[j];
                 }
                 lista_prioridade_alta[qtd_total_processos-1]=0;
+                printf("processo preemptado da alta \n");
             } 
             else
             if( lista_prioridade_baixa[0] != 0)
@@ -326,9 +334,57 @@ int main()
                     lista_prioridade_baixa[j-1]=lista_prioridade_baixa[j];
                 }
                 lista_prioridade_baixa[qtd_total_processos-1]=0;
+                printf("processo preemptado da baixa \n");
+            }
+        }
+        
+        //verificar se processo atual chegou ao fim
+        //verificar fila de alta
+        if(lista_prioridade_alta[0] != 0)
+        {
+            if(processo[lista_prioridade_alta[0]-1].tempo_processamento == processo[lista_prioridade_alta[0]-1].tempo_de_explosao_processo)
+            {
+                x--; // Diminui no numero de processos
+                
+                // Printa o fim daquele processo
+                printf("\nProcesso[%d]\t\t%d\t\t %d\t\t\t %d", lista_prioridade_alta[0], processo[lista_prioridade_alta[0]-1].tempo_de_explosao_processo, i - processo[lista_prioridade_alta[0]-1].tempo_de_chegada_processo, i - processo[lista_prioridade_alta[0]-1].tempo_de_chegada_processo - processo[lista_prioridade_alta[0]-1].tempo_de_explosao_processo);
+                tempo_de_espera = tempo_de_espera + i - processo[lista_prioridade_alta[0]-1].tempo_de_chegada_processo - processo[lista_prioridade_alta[0]-1].tempo_de_explosao_processo; // Verifica o tempo de espera
+                tempo_de_resposta = tempo_de_resposta + i - processo[lista_prioridade_alta[0]-1].tempo_de_chegada_processo; // Verifica o tempo de inversão 
+                
+                
+                //remover processo da fila de alta
+                for (j = 1 ; j < qtd_total_processos ; j++){
+                        lista_prioridade_alta[j-1]=lista_prioridade_alta[j];
+                    }
+                lista_prioridade_alta[qtd_total_processos-1]=0;
+                
+            }
+        } else
+        //verificar fila de baixa
+        if(lista_prioridade_baixa[0] != 0)
+        {
+            if(processo[lista_prioridade_baixa[0]-1].tempo_processamento == processo[lista_prioridade_baixa[0]-1].tempo_de_explosao_processo)
+            {
+                
+                x--; // Diminui no numero de processos
+                
+                // Printa o fim daquele processo
+                printf("\nProcesso[%d]\t\t%d\t\t %d\t\t\t %d", lista_prioridade_baixa[0], processo[lista_prioridade_baixa[0]-1].tempo_de_explosao_processo, i - processo[lista_prioridade_baixa[0]-1].tempo_de_chegada_processo, i - processo[lista_prioridade_baixa[0]-1].tempo_de_chegada_processo - processo[lista_prioridade_baixa[0]-1].tempo_de_explosao_processo);
+                tempo_de_espera = tempo_de_espera + i - processo[lista_prioridade_baixa[0]-1].tempo_de_chegada_processo - processo[lista_prioridade_baixa[0]-1].tempo_de_explosao_processo; // Verifica o tempo de espera
+                tempo_de_resposta = tempo_de_resposta + i - processo[lista_prioridade_baixa[0]-1].tempo_de_chegada_processo; // Verifica o tempo de inversão 
+                
+                
+                //remover processo da fila de baixa
+                for (j = 1 ; j < qtd_total_processos ; j++){
+                        lista_prioridade_baixa[j-1]=lista_prioridade_baixa[j];
+                    }
+                lista_prioridade_baixa[qtd_total_processos-1]=0;
+                
+                
             }
         }
             
+        /*    
         // Verifica de tempo de explosão dele é menor ou igual o quanto e maior que zero
         if(array_temp[i] <= quantum && array_temp[i] > 0)
         {
@@ -356,6 +412,7 @@ int main()
             var_aux = 0; // Coloca a variavel auxiliar como zero
         }
         
+        
         // Se i é igual ao numero de processos menos um 
         if(i == qtd_total_processos - 1)
         {
@@ -373,6 +430,7 @@ int main()
         {
             i = 0;
         }
+        */
     }
       
     // Extrai o tempo medio de espera
